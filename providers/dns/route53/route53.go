@@ -149,6 +149,7 @@ func (d *DNSProvider) Present(domain, token, keyAuth string) error {
 		log.Printf("there was an error in PreSolve: %v", err)
 		return fmt.Errorf("route53: %v", err)
 	}
+	log.Println("returning successfully")
 	return nil
 }
 
