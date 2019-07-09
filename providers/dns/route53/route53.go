@@ -159,11 +159,13 @@ func (d *DNSProvider) CleanUp(domain, token, keyAuth string) error {
 
 	hostedZoneID, err := d.getHostedZoneID(fqdn)
 	if err != nil {
+		log.Printf("error in cleanup %v", err)
 		return fmt.Errorf("failed to determine Route 53 hosted zone ID: %v", err)
 	}
 
 	records, err := d.getExistingRecordSets(hostedZoneID, fqdn)
 	if err != nil {
+		log.Printf("error in cleanup %v", err)
 		return fmt.Errorf("route53: %v", err)
 	}
 
@@ -215,7 +217,8 @@ func (d *DNSProvider) changeRecord(action, hostedZoneID string, recordSet *route
 		if aws.StringValue(resp.ChangeInfo.Status) == route53.ChangeStatusInsync {
 			return true, nil
 		}
-		return false, fmt.Errorf("state for change ID=%s: %v", aws.StringValue(changeID), resp.ChangeInfo)
+		return true, nil
+		// return false, fmt.Errorf("state for change ID=%s: %v", aws.StringValue(changeID), resp.ChangeInfo)
 	})
 }
 
