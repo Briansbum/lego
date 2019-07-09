@@ -102,6 +102,7 @@ func sequentialSolve(authSolvers []*selectedAuthSolver, failures obtainError) {
 			err := solvr.PreSolve(authSolver.authz)
 			if err != nil {
 				failures[domain] = err
+				log.Printf("there was an error in PreSolve: %v", err)
 				cleanUp(authSolver.solver, authSolver.authz)
 				continue
 			}

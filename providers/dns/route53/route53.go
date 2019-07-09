@@ -4,6 +4,7 @@ package route53
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math/rand"
 	"strings"
 	"time"
@@ -139,6 +140,8 @@ func (d *DNSProvider) Present(domain, token, keyAuth string) error {
 		ResourceRecords: records,
 	}
 
+	log.Print(recordSet)
+
 	err = d.changeRecord(route53.ChangeActionUpsert, hostedZoneID, recordSet)
 	if err != nil {
 		return fmt.Errorf("route53: %v", err)
@@ -208,7 +211,7 @@ func (d *DNSProvider) changeRecord(action, hostedZoneID string, recordSet *route
 		if aws.StringValue(resp.ChangeInfo.Status) == route53.ChangeStatusInsync {
 			return true, nil
 		}
-		return false, fmt.Errorf("unable to retrieve change: ID=%s", aws.StringValue(changeID))
+		return false, fmt.Errorf("state for change ID=%s: %v", aws.StringValue(changeID), resp.ChangeInfo)
 	})
 }
 
