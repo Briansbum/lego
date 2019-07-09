@@ -112,11 +112,13 @@ func (d *DNSProvider) Present(domain, token, keyAuth string) error {
 
 	hostedZoneID, err := d.getHostedZoneID(fqdn)
 	if err != nil {
+		log.Printf("there was an error in PreSolve: %v", err)
 		return fmt.Errorf("route53: failed to determine hosted zone ID: %v", err)
 	}
 
 	records, err := d.getExistingRecordSets(hostedZoneID, fqdn)
 	if err != nil {
+		log.Printf("there was an error in PreSolve: %v", err)
 		return fmt.Errorf("route53: %v", err)
 	}
 
@@ -144,6 +146,7 @@ func (d *DNSProvider) Present(domain, token, keyAuth string) error {
 
 	err = d.changeRecord(route53.ChangeActionUpsert, hostedZoneID, recordSet)
 	if err != nil {
+		log.Printf("there was an error in PreSolve: %v", err)
 		return fmt.Errorf("route53: %v", err)
 	}
 	return nil
